@@ -286,15 +286,16 @@ function UncontrolledContactForm() {
 
 export function FetchDemo() {
   const { data, loading, error } = useFetch("https://jsonplaceholder.typicode.com/users");
+  const limited = data?.slice(0, 3);
 
   return (
     <div>
       <h2>Data fetching with custom useFetch hook</h2>
       {loading && <p>Loading…</p>}
       {error && <p style={{ color: "red" }}>Error: {error.message}</p>}
-      {data && (
+      {limited && (
         <ul>
-          {data.map((u) => (
+          {limited.map((u) => (
             <li key={u.id}>
               {u.name} – {u.email}
             </li>
@@ -318,7 +319,7 @@ export function AxiosDemo() {
         const response = await axios.get("https://jsonplaceholder.typicode.com/users", {
           signal: controller.signal,
         });
-        setUsers(response.data.slice(0, 5));
+        setUsers(response.data.slice(0, 3));
         setError(null);
       } catch (err) {
         if (err.code !== "ERR_CANCELED") {
@@ -363,9 +364,9 @@ export function UsersLayout() {
     }
   };
 
-  const filtered = data?.filter((user) =>
-    user.name.toLowerCase().includes(term.toLowerCase())
-  );
+  const filtered = data
+    ?.filter((user) => user.name.toLowerCase().includes(term.toLowerCase()))
+    .slice(0, 3);
 
   return (
     <div style={{ display: "grid", gap: 16, gridTemplateColumns: "1fr 1fr" }}>
